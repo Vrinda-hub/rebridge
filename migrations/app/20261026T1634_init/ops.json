@@ -1,0 +1,414 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.ActiveNeed",
+    "label": "Create table \"ActiveNeed\"",
+    "summary": "Creates table \"ActiveNeed\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ActiveNeed"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ActiveNeed\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ActiveNeed\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"ActiveNeed\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ActiveNeed\"",
+        "sql": "CREATE TABLE \"public\".\"ActiveNeed\" (\n  \"id\" text NOT NULL,\n  \"neededQuantity\" int4 NOT NULL,\n  \"ngoId\" text NOT NULL,\n  \"priority\" text NOT NULL,\n  \"receivedQuantity\" int4 DEFAULT 0 NOT NULL,\n  \"title\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ActiveNeed\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"ActiveNeed\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"ActiveNeed\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.Donation",
+    "label": "Create table \"Donation\"",
+    "summary": "Creates table \"Donation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Donation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Donation\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Donation\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Donation\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Donation\"",
+        "sql": "CREATE TABLE \"public\".\"Donation\" (\n  \"address\" text,\n  \"category\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"distance\" text NOT NULL,\n  \"donorName\" text NOT NULL,\n  \"donorPhone\" text,\n  \"id\" text NOT NULL,\n  \"itemName\" text NOT NULL,\n  \"ngoId\" text NOT NULL,\n  \"quantity\" text NOT NULL,\n  \"status\" text DEFAULT 'Pending' NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Donation\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Donation\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Donation\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.Ngo",
+    "label": "Create table \"Ngo\"",
+    "summary": "Creates table \"Ngo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Ngo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Ngo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Ngo\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"Ngo\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Ngo\"",
+        "sql": "CREATE TABLE \"public\".\"Ngo\" (\n  \"address\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"isVerified\" bool DEFAULT false NOT NULL,\n  \"name\" text NOT NULL,\n  \"password\" text NOT NULL,\n  \"registrationId\" text,\n  \"sector\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Ngo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"Ngo\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"Ngo\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "unique.Ngo.Ngo_email_key",
+    "label": "Add unique constraint on \"Ngo\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Ngo_email_key",
+        "table": "Ngo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Ngo_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Ngo_email_key",
+          "public",
+          "\"public\".\"Ngo\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Ngo_email_key\" on \"Ngo\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Ngo_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"Ngo\" ADD CONSTRAINT \"Ngo_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Ngo_email_key\" exists on (email)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Ngo_email_key",
+          "public",
+          "\"public\".\"Ngo\"",
+          "u",
+          "[\"email\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ActiveNeed.ActiveNeed_ngoId_idx_99c8e6b5",
+    "label": "Create index \"ActiveNeed_ngoId_idx_99c8e6b5\" on \"ActiveNeed\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ActiveNeed_ngoId_idx_99c8e6b5",
+        "table": "ActiveNeed"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ActiveNeed_ngoId_idx_99c8e6b5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ActiveNeed_ngoId_idx_99c8e6b5\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"ActiveNeed_ngoId_idx_99c8e6b5\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ActiveNeed_ngoId_idx_99c8e6b5\"",
+        "sql": "CREATE INDEX \"ActiveNeed_ngoId_idx_99c8e6b5\" ON \"public\".\"ActiveNeed\" (\"ngoId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ActiveNeed_ngoId_idx_99c8e6b5\" exists on \"ActiveNeed\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"ActiveNeed_ngoId_idx_99c8e6b5\"",
+          "i",
+          "I",
+          "\"public\".\"ActiveNeed\"",
+          "btree",
+          "[\"ngoId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Donation.Donation_ngoId_idx_99c8e6b5",
+    "label": "Create index \"Donation_ngoId_idx_99c8e6b5\" on \"Donation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Donation_ngoId_idx_99c8e6b5",
+        "table": "Donation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Donation_ngoId_idx_99c8e6b5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Donation_ngoId_idx_99c8e6b5\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Donation_ngoId_idx_99c8e6b5\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Donation_ngoId_idx_99c8e6b5\"",
+        "sql": "CREATE INDEX \"Donation_ngoId_idx_99c8e6b5\" ON \"public\".\"Donation\" (\"ngoId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Donation_ngoId_idx_99c8e6b5\" exists on \"Donation\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Donation_ngoId_idx_99c8e6b5\"",
+          "i",
+          "I",
+          "\"public\".\"Donation\"",
+          "btree",
+          "[\"ngoId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ActiveNeed.ActiveNeed_ngoId_fkey",
+    "label": "Add foreign key \"ActiveNeed_ngoId_fkey\" on \"ActiveNeed\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ActiveNeed_ngoId_fkey",
+        "table": "ActiveNeed"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ActiveNeed_ngoId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ActiveNeed_ngoId_fkey",
+          "public",
+          "\"public\".\"ActiveNeed\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"ActiveNeed_ngoId_fkey\" on \"ActiveNeed\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ActiveNeed_ngoId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ActiveNeed\"\nADD CONSTRAINT \"ActiveNeed_ngoId_fkey\"\nFOREIGN KEY (\"ngoId\")\nREFERENCES \"public\".\"Ngo\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ActiveNeed_ngoId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "ActiveNeed_ngoId_fkey",
+          "public",
+          "\"public\".\"ActiveNeed\"",
+          "f",
+          "[\"ngoId\"]",
+          "\"public\".\"Ngo\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Donation.Donation_ngoId_fkey",
+    "label": "Add foreign key \"Donation_ngoId_fkey\" on \"Donation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Donation_ngoId_fkey",
+        "table": "Donation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Donation_ngoId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Donation_ngoId_fkey",
+          "public",
+          "\"public\".\"Donation\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"Donation_ngoId_fkey\" on \"Donation\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Donation_ngoId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Donation\"\nADD CONSTRAINT \"Donation_ngoId_fkey\"\nFOREIGN KEY (\"ngoId\")\nREFERENCES \"public\".\"Ngo\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Donation_ngoId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "Donation_ngoId_fkey",
+          "public",
+          "\"public\".\"Donation\"",
+          "f",
+          "[\"ngoId\"]",
+          "\"public\".\"Ngo\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  }
+]

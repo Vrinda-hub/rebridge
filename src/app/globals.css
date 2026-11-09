@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  background: #070e1b;
+  color: #c7d2dd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  background: #5c8ae0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Gradient Text matching target image */
+.brand-gradient {
+  background: linear-gradient(100deg, #65ce9d 0%, #03fff2 50%, #0077ff 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Background Ambient Lighting Glows */
+.ambient-glow {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(500px);
+  opacity: 0.35;
+  animation: glow-drift 20s ease-in-out infinite alternate;
+}
+
+.glow-one {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  background: #1e5594;
+}
+
+.glow-two {
+  width: 380px;
+  height: 380px;
+  top: 40%;
+  left: 25%;
+  background: #87f2d9;
+  animation-delay: -4s;
+}
+
+.glow-three {
+  width: 420px;
+  height: 420px;
+  bottom: -150px;
+  right: 5%;
+  background: #e078ff;
+  animation-delay: -7s;
+}
+
+@keyframes glow-drift {
+  0% { transform: translate3d(0, 0, 0) scale(0.9); }
+  50% { transform: translate3d(30px, -20px, 0) scale(1.1); }
+  100% { transform: translate3d(-15px, 25px, 0) scale(1); }
+}
+
+/* Floating Particles */
+.particle {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1aeec4;
+  box-shadow: 0 0 16px rgba(15, 232, 221, 0.9);
+  opacity: 0.6;
+}
+
+.particle-one { top: 25%; left: 8%; }
+.particle-two { top: 65%; left: 45%; background: #abcef7; box-shadow: 0 0 16px rgba(63, 150, 249, 0.9); }
+.particle-three { top: 15%; right: 12%; }
+
+/* Pill Action Buttons from Target Design */
+.pill-btn {
+  background: linear-gradient(110deg, rgba(0, 255, 221, 0.25), rgba(16, 120, 200, 0.35));
+  border: 1px solid rgba(74, 222, 210, 0.5);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 180, 160, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.pill-btn:hover,
+.pill-btn-active {
+  background: linear-gradient(110deg, rgba(0, 255, 208, 0.45), rgba(6, 91, 152, 0.55));
+  border-color: rgba(8, 236, 183, 0.85);
+  box-shadow: 0 0 25px rgba(80, 121, 116, 0.45), inset 0 1px 0 rgba(13, 12, 12, 0.3);
+  transform: translateY(-2px);
+}
+
+.pill-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Category Item Hover */
+.category-item {
+  transition: transform 200ms ease, color 200ms ease;
+  cursor: pointer;
+}
+
+.category-item:hover {
+  transform: translateY(-3px);
+  color: #1bcf9c;
+}
+
+/* Image Wrapper & Seamless Gradient Blend */
+.hero-photo-wrapper {
+  position: relative;
+  min-height: 700px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.hero-image-overlay {
+  pointer-events: none;
+  background:
+    linear-gradient(to right, #050b16 0%, rgba(5, 11, 22, 0.4) 15%, transparent 40%),
+    linear-gradient(to top, #050b16 0%, rgba(5, 11, 22, 0.3) 20%, transparent 50%),
+    linear-gradient(to bottom, #050b16 0%, transparent 20%);
+}
+
+/* Script Tagline at Bottom Right */
+.quote-bottom-right {
+  transform: rotate(-3deg);
+  transform-origin: bottom right;
+}
+
+.tagline-script {
+  font-family: "Caveat", cursive;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #34aa51;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
+}
+
+.tagline-highlight {
+  background: linear-gradient(100deg, #79fb00, #31fcff, #3914be);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
